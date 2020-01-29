@@ -31,7 +31,16 @@ public class Assignment1_DB {
 				choice = input.nextInt();
 			}
 			else if (choice == 2) {
-				System.out.println("Opening existing database...");
+				System.out.println("Open Database");
+				boolean open = DB.open();
+				if (open) 
+				{
+					System.out.println("Close other database");
+				}
+				else 
+				{
+					System.out.println("Database opened");
+				}
 				System.out.print("Choose from the above list of options: ");
 				choice = input.nextInt();
 			}
@@ -75,4 +84,3 @@ public class Assignment1_DB {
 		System.exit(0);
 	}
 }
-

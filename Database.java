@@ -1,12 +1,14 @@
 import java.util.Scanner;
 import java.io.File;
+import java.io.FileReader;
 import java.io.FileWriter;
+import java.io.BufferedReader;
 import java.io.IOException;
 
 public class Database {
 	
-	private int numRecords = 0;
-	private int recordSize = 0;
+	private static int numRecords = 0;
+	private int recordSize = 83; //82 bytes per line + 1 byte per newline char
 	
 	public Database()
 	{
@@ -25,63 +27,42 @@ public class Database {
 		String over = fname + ".overflow";
 		System.out.println("Input File: " + csv + "\n" + "Output Files: " + con + ", " + data + ", " + over);
 		
-		//File Input
-		Scanner din = new Scanner(new File(csv));
+		//File I/O
+		BufferedReader din = new BufferedReader(new FileReader(csv));
 		File outData = new File(data);
 		FileWriter dout = new FileWriter(outData);
-		din.useDelimiter(",");
-		String record = "EMPTY";
-		String rank = "-1";
-		String name = "EMPTY";
-		String city = "EMPTY";
-		String state = "EMPTY";
-		String zip = "-1";
-		String employees = "-1";
-		while (din.hasNext())
+		String record = din.readLine();
+		while (record != null)
 		{
-			rank = din.next();
-			name = din.next();
-			city = din.next();
-			state = din.next();
-			zip = din.next();
-			employees = din.next();
-			record = din.nextLine();
-			System.out.println(rank);
-			System.out.println(name);
-			System.out.println(city);
-			System.out.println(state);
-			System.out.println(zip);
-			System.out.println(employees);
-			dout.write(rank);
-			dout.write(name);
-			dout.write(city);
-			dout.write(state);
-			dout.write(zip);
-			dout.write(employees);
+			//System.out.println("Here is a record: " + record);
+			String[] fields = record.split(",");
+			fields[0] = String.format("%3s", fields[0]); //Rank
+			fields[1] = String.format("%40s", fields[1]); //Company Name
+			fields[2] = String.format("%20s", fields[2]); //City
+			fields[3] = String.format("%3s", fields[3]); //State
+			fields[4] = String.format("%6s", fields[4]); //Zip
+			fields[5] = String.format("%10s", fields[5]); //Employee num
+			for(int i = 0; i < fields.length; i++)
+			{
+				dout.write(fields[i]);
+			}
+			numRecords++; //Updates for every record that is written
+			dout.write("\n");
+			record = din.readLine();
 		}
+		//Close streams
+		System.out.println("Your file contained " + numRecords + " records");
 		din.close();
 		dout.close();
-		/*
-		RandomAccessFile dataIn = new RandomAccessFile(csv, "r");
-		RandomAccessFile dataOut = new RandomAccessFile(data, "rw");
-		String record = "";
-		int recordNumber = 1;
-		while (recordNumber <= NUM_RECORDS)
-		{
-			record = getRecord(dataIn, recordNumber);
-			System.out.println(record);
-			dataOut.seek(recordNumber * RECORD_SIZE);
-			dataOut.writeBytes(record);
-			recordNumber++;
-		}
-		dataOut.close(); //Take this out later
-		dataIn.close();
-		*/
 	}
 	
 	public boolean open() 
 	{
-		return true;
+		boolean successOpen = false;
+		Scanner in = new Scanner(System.in);
+		System.out.print("Enter the prefix for a pre-exisisting database: ");
+		String prefix = in.nextLine();
+		return successOpen;
 	}
 	
 	public void close()
