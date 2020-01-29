@@ -1,127 +1,78 @@
 import java.util.Scanner;
-import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 
-public class Database {
-	
-	private int numRecords = 0;
-	private int recordSize = 0;
-	
-	public Database()
+public class Assignment1_DB {
+	public static void main(String[] args) throws IOException
 	{
-		numRecords = 0;
-		recordSize = 0;
-	}
-	
-	public void create() throws IOException
-	{
-		Scanner in = new Scanner(System.in);
-		System.out.print("Please enter the name of a .csv file: ");
-		String fname = in.nextLine();
-		String csv = fname + ".csv";
-		String con = fname + ".config"; //when close DB, update config file
-		String data = fname + ".data.txt";
-		String over = fname + ".overflow";
-		System.out.println("Input File: " + csv + "\n" + "Output Files: " + con + ", " + data + ", " + over);
+		Scanner input = new Scanner(System.in);
+		Database DB = new Database(); //Creates a Database object for menu methods
 		
-		//File Input
-		Scanner din = new Scanner(new File(csv));
-		File outData = new File(data);
-		FileWriter dout = new FileWriter(outData);
-		din.useDelimiter(",");
-		String record = "EMPTY";
-		String rank = "-1";
-		String name = "EMPTY";
-		String city = "EMPTY";
-		String state = "EMPTY";
-		String zip = "-1";
-		String employees = "-1";
-		while (din.hasNext())
+		//Menu choices
+		System.out.println("Choose from the following list of options: ");
+		System.out.println("1.) Create a New Database");
+		System.out.println("2.) Open Database");
+		System.out.println("3.) Close Database");
+		System.out.println("4.) Display Record");
+		System.out.println("5.) Update Record");
+		System.out.println("6.) Create Report");
+		System.out.println("7.) Add Report");
+		System.out.println("8.) Delete Record");
+		System.out.println("9.) Quit");
+		System.out.print("Input: ");
+		int choice = input.nextInt();
+		System.out.println(choice);
+		
+		while (choice != 9)
 		{
-			rank = din.next();
-			name = din.next();
-			city = din.next();
-			state = din.next();
-			zip = din.next();
-			employees = din.next();
-			record = din.nextLine();
-			System.out.println(rank);
-			System.out.println(name);
-			System.out.println(city);
-			System.out.println(state);
-			System.out.println(zip);
-			System.out.println(employees);
-			dout.write(rank);
-			dout.write(name);
-			dout.write(city);
-			dout.write(state);
-			dout.write(zip);
-			dout.write(employees);
+			if (choice == 1) {
+				System.out.println("Creating a new database...");
+				DB.create();
+				System.out.print("Choose from the above list of options: ");
+				choice = input.nextInt();
+			}
+			else if (choice == 2) {
+				System.out.println("Opening existing database...");
+				System.out.print("Choose from the above list of options: ");
+				choice = input.nextInt();
+			}
+			else if (choice == 3) {
+				System.out.println("Closing database...");
+				System.out.print("Choose from the above list of options: ");
+				choice = input.nextInt();
+			}
+			else if (choice == 4) {
+				System.out.println("Displaying records...");
+				System.out.print("Choose from the above list of options: ");
+				choice = input.nextInt();
+			}
+			else if (choice == 5) {
+				System.out.println("Updating records...");
+				System.out.print("Choose from the above list of options: ");
+				choice = input.nextInt();
+			}
+			else if (choice == 6) {
+				System.out.println("Creating report...");
+				System.out.print("Choose from the above list of options: ");
+				choice = input.nextInt();
+			}
+			else if (choice == 7) {
+				System.out.println("Adding report...");
+				System.out.print("Choose from the above list of options: ");
+				choice = input.nextInt();
+			}
+			else if (choice == 8) {
+				System.out.println("Delete record...");
+				System.out.print("Choose from the above list of options: ");
+				choice = input.nextInt();
+			}
+			else
+			{
+				System.out.print("Invalid input, enter choice from the list: ");
+				choice = input.nextInt();
+			}
 		}
-		din.close();
-		dout.close();
-		/*
-		RandomAccessFile dataIn = new RandomAccessFile(csv, "r");
-		RandomAccessFile dataOut = new RandomAccessFile(data, "rw");
-		String record = "";
-		int recordNumber = 1;
-		while (recordNumber <= NUM_RECORDS)
-		{
-			record = getRecord(dataIn, recordNumber);
-			System.out.println(record);
-			dataOut.seek(recordNumber * RECORD_SIZE);
-			dataOut.writeBytes(record);
-			recordNumber++;
-		}
-		dataOut.close(); //Take this out later
-		dataIn.close();
-		*/
+		System.out.println("Quitting...");
+		System.exit(0);
 	}
-	
-	public boolean open() 
-	{
-		return true;
-	}
-	
-	public void close()
-	{
-		
-	}
-	
-	public void display()
-	{
-		
-	}
-	
-	public void createReport()
-	{
-		
-	}
-	
-	public void addRecord()
-	{
-		String record = "";
-		System.out.print("Enter a record to add: ");
-	}
-	
-	public void deleteRecord()
-	{
-		
-	}
-	
-	/*
-	public String getRecord(RandomAccessFile dataIn, int recordNumber) throws IOException
-	{
-		String record = "Record Not Found";
-		System.out.println("Record Number: " + recordNumber);
-		if((recordNumber >= 1) && (recordNumber <= NUM_RECORDS))
-		{
-			dataIn.seek(0);
-			dataIn.skipBytes(recordNumber * RECORD_SIZE);
-			record = dataIn.readLine();
-		}
-		return record;
-	}
-	*/
 }
+
