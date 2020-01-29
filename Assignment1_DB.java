@@ -25,7 +25,7 @@ public class Assignment1_DB {
 		while (choice != 9)
 		{
 			if (choice == 1) {
-				System.out.println("Creating a new database...");
+				System.out.println("Create Database");
 				DB.create();
 				System.out.print("Choose from the above list of options: ");
 				choice = input.nextInt();
@@ -46,6 +46,7 @@ public class Assignment1_DB {
 			}
 			else if (choice == 3) {
 				System.out.println("Closing database...");
+				boolean close = DB.close();
 				System.out.print("Choose from the above list of options: ");
 				choice = input.nextInt();
 			}
@@ -61,6 +62,7 @@ public class Assignment1_DB {
 			}
 			else if (choice == 6) {
 				System.out.println("Creating report...");
+				DB.createReport();
 				System.out.print("Choose from the above list of options: ");
 				choice = input.nextInt();
 			}
