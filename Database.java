@@ -130,10 +130,30 @@ public class Database {
 	
 	public void update() throws IOException
 	{
+		String filename = "f.data.txt";
+		RandomAccessFile din = new RandomAccessFile("f.data.txt", "rw"); 
+		
+		String line = din.readLine();
+		
 		Scanner in = new Scanner(System.in);
-		RandomAccessFile din = new RandomAccessFile(testStr + ".data.txt", "r");
-		System.out.print("Enter name of company to update: ");
-		String search = in.nextLine();
+		//System.out.print("Enter name of company to edit: ");
+		//String search = in.nextLine();
+		//String record = binarySearch(din, search);
+		String record= "111";
+		String str= "REP";
+		while(line != null ) 
+		{
+			long filePos = din.getFilePointer();
+			String s = line.substring(0,3);
+			if (s.equals(record)) {
+				din.seek(filePos);
+				din.writeBytes(str);
+			}
+			line=din.readLine();
+
+		}
+		
+		din.close();
 		
 	}
 	
