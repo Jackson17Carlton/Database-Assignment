@@ -41,6 +41,7 @@ public class Database {
 				//System.out.println("Here is a record: " + record);
 				String[] fields = record.split(",");
 				fields[0] = String.format("%-4s", fields[0]); //Rank
+				fields[1] = fields[1].replace(' ','_'); //add underscores
 				fields[1] = String.format("%-40s", fields[1]); //Company Name
 				fields[2] = String.format("%-20s", fields[2]); //City
 				fields[3] = String.format("%-3s", fields[3]); //State
