@@ -1,5 +1,6 @@
 import java.util.Scanner;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.RandomAccessFile;
@@ -8,17 +9,17 @@ import java.io.IOException;
 
 public class Database {
 	
-	private int numRecords = 0;
-	private int recordSize = 84; //83 bytes per line + 1 byte per newline char
+	private static int numRecords = 0;
+	private static int recordSize = 84; //83 bytes per line + 1 byte per newline char
 	private FileWriter dout;
 	private FileWriter configOut;
 	private FileWriter overOut;
 	private BufferedReader din;
+	private String testStr = "f";
 	
 	public Database()
 	{
 		numRecords = 0;
-		recordSize = 0;
 	}
 	
 	public void create()
@@ -28,7 +29,7 @@ public class Database {
 		String fname = in.nextLine();
 		String csv = fname + ".csv";
 		String con = fname + ".config"; //when close DB, update config file
-		String data = fname + ".data.txt"; //REMINDER: change this later
+		String data = fname + ".data.txt";
 		String over = fname + ".overflow";
 		System.out.println("Input File: " + csv + "\n" + "Output Files: " + con + ", " + data + ", " + over);
 		
@@ -36,8 +37,8 @@ public class Database {
 		try
 		{
 			din = new BufferedReader(new FileReader(csv)); //Input stream
-			dout = new FileWriter(new File(data)); //.data filewriter & creates data file
 			configOut = new FileWriter(new File(con)); //config filewriter & creates config file
+			dout = new FileWriter(new File(data)); //.data filewriter & creates data file
 			overOut = new FileWriter(new File(over)); //overflow filewriter & creates overflow file
 			String record = din.readLine();
 			while (record != null)
@@ -59,9 +60,17 @@ public class Database {
 				dout.write("\n");
 				record = din.readLine();
 			}
+			
 			//Close streams
 			din.close();
 			dout.close();
+			overOut.close();
+			
+			//Write to config file
+			String writeNum = Integer.toString(numRecords); //converts to string
+			configOut.write(writeNum);
+			configOut.close();
+			
 		}
 		catch (IOException e) 
 		{
@@ -70,21 +79,18 @@ public class Database {
 		System.out.println("Your file contained " + numRecords + " records");
 	}
 	
-	public boolean open() 
+	public boolean open()
 	{
 		Scanner in = new Scanner(System.in);
-		System.out.print("Enter the prefix for a pre-exisisting database to open: ");
-		String prefix = in.nextLine();;
-		try 
+		System.out.print("Enter the prefix for a pre-exisisting database to open: "); //REMINDER: Take out
+		String prefix = in.nextLine();
+		File test = new File(prefix + ".data");
+		if (test.exists()) //If file exists, it is "open"
 		{
-			dout = new FileWriter(prefix + ".data.txt");
-			configOut = new FileWriter(prefix + ".config");
-			overOut = new FileWriter(prefix + ".overflow");
 			return true;
-		} 
-		catch (IOException e) 
+		}
+		else
 		{
-			e.printStackTrace();
 			return false;
 		}
 	}
@@ -93,10 +99,15 @@ public class Database {
 	{
 		try 
 		{
+			Scanner in = new Scanner(System.in);
+			System.out.print("Enter the prefix for a pre-exisisting database to close: "); //REMINDER: Take out
+			String prefix = in.nextLine();
+			configOut = new FileWriter(prefix + ".config");
+			//System.out.print(numRecords);
+			String writeNum = Integer.toString(numRecords); //converts numRecords to string so can be written to config file
+			configOut.write("Updated Number of Files: " + writeNum);
 			numRecords = 0;
-			dout.close();
 			configOut.close();
-			overOut.close();
 			return true;
 		} 
 		catch (IOException e) 
@@ -106,9 +117,16 @@ public class Database {
 		}
 	}
 	
-	public void display()
+	public void display() throws IOException
 	{
-		//RandomAccessFile din = new RandomAccessFile();
+		Scanner in = new Scanner(System.in);
+		RandomAccessFile din = new RandomAccessFile(testStr + ".data.txt", "r");
+		System.out.print("Enter name of company to search for: ");
+		String search = in.nextLine();
+		//String record = getRecord(din, 0);
+		String record = binarySearch(din, search);
+		System.out.println(record);
+		
 	}
 	
 	public void createReport()
@@ -127,6 +145,48 @@ public class Database {
 		
 	}
 	
+	public static String getRecord(RandomAccessFile Din, int recordNum) throws IOException 
+	{
+	   String record = "NOT_FOUND";
+       if ((recordNum >= 1) && (recordNum <= numRecords - 1))
+       {
+    	   System.out.println(recordNum + "," + recordSize);
+           Din.seek(0); // return to the top of the file
+           Din.skipBytes(recordNum * recordSize);
+           record = Din.readLine();
+       }
+       return record;
+	}
 
-	
+	    /*Binary Search record id */
+    public static String binarySearch(RandomAccessFile Din, String id) throws IOException 
+    {
+	    int Low = 0;
+	    int High = numRecords-1;
+	    int Middle;
+	    String MiddleId;
+	    String record = "NOT_FOUND";
+	    boolean Found = false;
+
+        while (!Found && (High >= Low)) 
+        {
+            Middle = (Low + High) / 2;
+            record = getRecord(Din, Middle+1);
+            MiddleId = record.substring(5,44);
+            System.out.println(MiddleId);
+     
+            int result = MiddleId.compareTo(id);
+            if (result == 0)   // ids match
+                Found = true;
+            else if (result < 0)
+                Low = Middle + 1;
+            else
+                High = Middle - 1;
+        }
+        if (Found)
+           return record;
+        else
+           return "NOT_FOUND";
+	  }
 }
+

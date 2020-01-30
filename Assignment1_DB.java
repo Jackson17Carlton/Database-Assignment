@@ -33,13 +33,14 @@ public class Assignment1_DB {
 			else if (choice == 2) {
 				System.out.println("Open Database");
 				boolean open = DB.open();
+				System.out.println(open);
 				if (open) 
 				{
-					System.out.println("Close other database");
+					System.out.println("Database opened");
 				}
 				else 
 				{
-					System.out.println("Database opened");
+					System.out.println("Database doesn't exist");
 				}
 				System.out.print("Choose from the above list of options: ");
 				choice = input.nextInt();
@@ -53,13 +54,14 @@ public class Assignment1_DB {
 				}
 				else
 				{
-					System.out.println("Could not close files");
+					System.out.println("Could not close files, files are not open");
 				}
 				System.out.print("Choose from the above list of options: ");
 				choice = input.nextInt();
 			}
 			else if (choice == 4) {
 				System.out.println("Displaying records...");
+				DB.display();
 				System.out.print("Choose from the above list of options: ");
 				choice = input.nextInt();
 			}
