@@ -11,6 +11,9 @@ public class Database {
 	private int numRecords = 0;
 	private int recordSize = 84; //83 bytes per line + 1 byte per newline char
 	private FileWriter dout;
+	private FileWriter configOut;
+	private FileWriter overOut;
+	private BufferedReader din;
 	
 	public Database()
 	{
@@ -25,23 +28,24 @@ public class Database {
 		String fname = in.nextLine();
 		String csv = fname + ".csv";
 		String con = fname + ".config"; //when close DB, update config file
-		String data = fname + ".data.txt";
+		String data = fname + ".data.txt"; //REMINDER: change this later
 		String over = fname + ".overflow";
 		System.out.println("Input File: " + csv + "\n" + "Output Files: " + con + ", " + data + ", " + over);
 		
 		//File I/O
 		try
 		{
-			BufferedReader din = new BufferedReader(new FileReader(csv));
-			File outData = new File(data);
-			dout = new FileWriter(outData);
+			din = new BufferedReader(new FileReader(csv)); //Input stream
+			dout = new FileWriter(new File(data)); //.data filewriter & creates data file
+			configOut = new FileWriter(new File(con)); //config filewriter & creates config file
+			overOut = new FileWriter(new File(over)); //overflow filewriter & creates overflow file
 			String record = din.readLine();
 			while (record != null)
 			{
 				//System.out.println("Here is a record: " + record);
 				String[] fields = record.split(",");
 				fields[0] = String.format("%-4s", fields[0]); //Rank
-				fields[1] = fields[1].replace(' ','_'); //add underscores
+				fields[1] = fields[1].replace(' ','_'); //Replaces whitespace w underscores
 				fields[1] = String.format("%-40s", fields[1]); //Company Name
 				fields[2] = String.format("%-20s", fields[2]); //City
 				fields[3] = String.format("%-3s", fields[3]); //State
@@ -55,7 +59,7 @@ public class Database {
 				dout.write("\n");
 				record = din.readLine();
 			}
-			//din.close(); //closes reading stream, close method used for closing writing stream
+			//Close streams
 			din.close();
 			dout.close();
 		}
@@ -63,45 +67,43 @@ public class Database {
 		{
 			e.printStackTrace();
 		}
-		//Close streams
 		System.out.println("Your file contained " + numRecords + " records");
-		
 	}
 	
 	public boolean open() 
 	{
-		boolean successOpen = false;
 		Scanner in = new Scanner(System.in);
 		System.out.print("Enter the prefix for a pre-exisisting database to open: ");
-		String prefix = in.nextLine();
-		File data = new File(prefix + ".data.txt");
-		Boolean open = data.canWrite();
-		System.out.print(open);
-		if(open)
+		String prefix = in.nextLine();;
+		try 
 		{
-			successOpen = true;
-			return successOpen;
-		}
-		else 
+			dout = new FileWriter(prefix + ".data.txt");
+			configOut = new FileWriter(prefix + ".config");
+			overOut = new FileWriter(prefix + ".overflow");
+			return true;
+		} 
+		catch (IOException e) 
 		{
-			return successOpen;
+			e.printStackTrace();
+			return false;
 		}
 	}
 	
 	public boolean close()
 	{
-		boolean successClose = false;
-		Scanner in = new Scanner(System.in);
-		System.out.print("Enter the prefix for a pre-exisisting database to close: ");
-		String prefix = in.nextLine();
-		try {
-			dout = new FileWriter(prefix + ".data.txt");
+		try 
+		{
 			numRecords = 0;
 			dout.close();
-		} catch (IOException e) {
+			configOut.close();
+			overOut.close();
+			return true;
+		} 
+		catch (IOException e) 
+		{
 			e.printStackTrace();
+			return false;
 		}
-		return successClose;
 	}
 	
 	public void display()

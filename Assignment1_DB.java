@@ -47,6 +47,14 @@ public class Assignment1_DB {
 			else if (choice == 3) {
 				System.out.println("Closing database...");
 				boolean close = DB.close();
+				if (close)
+				{
+					System.out.println("Files successfully closed");
+				}
+				else
+				{
+					System.out.println("Could not close files");
+				}
 				System.out.print("Choose from the above list of options: ");
 				choice = input.nextInt();
 			}
