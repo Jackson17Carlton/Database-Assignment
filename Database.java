@@ -46,7 +46,7 @@ public class Database {
 				//System.out.println("Here is a record: " + record);
 				String[] fields = record.split(",");
 				fields[0] = String.format("%-4s", fields[0]); //Rank
-				fields[1] = fields[1].replace(' ','_'); //Replaces whitespace w underscores
+				//fields[1] = fields[1].replace(' ','_'); //Replaces whitespace w underscores
 				fields[1] = String.format("%-40s", fields[1]); //Company Name
 				fields[2] = String.format("%-20s", fields[2]); //City
 				fields[3] = String.format("%-3s", fields[3]); //State
@@ -123,9 +123,17 @@ public class Database {
 		RandomAccessFile din = new RandomAccessFile(testStr + ".data.txt", "r");
 		System.out.print("Enter name of company to search for: ");
 		String search = in.nextLine();
-		//String record = getRecord(din, 0);
 		String record = binarySearch(din, search);
-		System.out.println(record);
+		System.out.println("Found record: " + record);
+		din.close();
+	}
+	
+	public void update() throws IOException
+	{
+		Scanner in = new Scanner(System.in);
+		RandomAccessFile din = new RandomAccessFile(testStr + ".data.txt", "r");
+		System.out.print("Enter name of company to update: ");
+		String search = in.nextLine();
 		
 	}
 	
@@ -148,17 +156,17 @@ public class Database {
 	public static String getRecord(RandomAccessFile Din, int recordNum) throws IOException 
 	{
 	   String record = "NOT_FOUND";
-       if ((recordNum >= 1) && (recordNum <= numRecords - 1))
+       if ((recordNum >= 1) && (recordNum <= numRecords))
        {
-    	   System.out.println(recordNum + "," + recordSize);
+    	   //System.out.println(recordNum + "," + recordSize); REMINDER: TESTING
            Din.seek(0); // return to the top of the file
-           Din.skipBytes(recordNum * recordSize);
+           Din.skipBytes((recordNum - 1) * recordSize);
            record = Din.readLine();
        }
        return record;
 	}
 
-	    /*Binary Search record id */
+	/*Binary Search record id */
     public static String binarySearch(RandomAccessFile Din, String id) throws IOException 
     {
 	    int Low = 0;
@@ -172,10 +180,11 @@ public class Database {
         {
             Middle = (Low + High) / 2;
             record = getRecord(Din, Middle+1);
-            MiddleId = record.substring(5,44);
-            System.out.println(MiddleId);
+            MiddleId = record.substring(4, id.length() + 4);
+            //System.out.println(MiddleId); //REMINDER: TESTING
      
             int result = MiddleId.compareTo(id);
+            System.out.println(result);
             if (result == 0)   // ids match
                 Found = true;
             else if (result < 0)

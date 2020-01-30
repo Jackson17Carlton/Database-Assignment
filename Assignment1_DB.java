@@ -67,6 +67,7 @@ public class Assignment1_DB {
 			}
 			else if (choice == 5) {
 				System.out.println("Updating records...");
+				DB.update();
 				System.out.print("Choose from the above list of options: ");
 				choice = input.nextInt();
 			}
