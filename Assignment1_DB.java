@@ -88,6 +88,7 @@ public class Assignment1_DB {
 			}
 			else if (choice == 8) {
 				System.out.println("Delete record...");
+				DB.deleteRecord();
 				printMenu();
 				choice = input.nextInt();
 			}
