@@ -307,9 +307,66 @@ public class Database {
 		System.out.print("Enter a record to add: ");
 	}
 	
-	public void deleteRecord() //NEEDS TO BE COMPLETED
+	public void deleteRecord() 
 	{
+		Scanner in = new Scanner(System.in);
+		System.out.print("Enter name of company to delete record for: ");
+		String search = in.nextLine();
+	
+		try 
+		{
+			search = search.replace(" ", "_");
+			RandomAccessFile din = new RandomAccessFile(testStr + ".data.txt", "rw");
+			String record = binarySearch(din, search); //updates recordNum so can find position in file
+			if (record == "NOT_FOUND")
+			{
+				return;
+			}	
+					//rank
+					String rank = "-1";
+					rank = String.format("%-4s", rank);
+					String subRec = record.substring(0, 4);
+					record = record.replace(subRec, rank);
+					//company 
+					String company = "-1";
+					company = String.format("%-40s", company);
+					String subRec0 = record.substring(4,44);
+					record = record.replace(subRec0, company);
+					//city
+					String city = "-1";
+					city = String.format("%-20s", city);
+					String subRec1 = record.substring(44, 64);
+					record = record.replace(subRec1, city);
+					//state
+					String state = "-1";
+					state = String.format("%-3s", state);
+					String subRec3 = record.substring(64, 67);
+					record = record.replace(subRec3, state);
+					//zip
+					String zip = "-1";
+					zip = String.format("%-6s", zip);
+					String subRec4 = record.substring(67, 73);
+					record = record.replace(subRec4, zip);
+					//employee
+					String empCount = "-1";
+					empCount = String.format("%-10s", empCount);
+					String subRec5 = record.substring(73, 83);
+					record = record.replace(subRec5, empCount);
+					
+					//write record
+					record = record + "\n";
+					din.seek(0);
+					din.skipBytes(recordNum * recordSize);
+					din.write(record.getBytes());
+				
+					din.close();
+		}
 		
+		catch (FileNotFoundException e) 
+		{
+			e.printStackTrace();
+			System.out.println("File could not be opened");
+		}
 	}
 	
 	public static String getRecord(RandomAccessFile Din, int recordNum) throws IOException 
