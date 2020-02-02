@@ -2,13 +2,10 @@ import java.util.Scanner;
 import java.io.IOException;
 
 public class Assignment1_DB {
-	public static void main(String[] args) throws IOException
+	public static void printMenu() 
 	{
-		Scanner input = new Scanner(System.in);
-		Database DB = new Database(); //Creates a Database object for menu methods
-		
 		//Menu choices
-		System.out.println("Choose from the following list of options: ");
+		System.out.println("Choose from the following list of options (enter integer): ");
 		System.out.println("1.) Create a New Database");
 		System.out.println("2.) Open Database");
 		System.out.println("3.) Close Database");
@@ -19,36 +16,43 @@ public class Assignment1_DB {
 		System.out.println("8.) Delete Record");
 		System.out.println("9.) Quit");
 		System.out.print("Input: ");
+	}
+	public static void main(String[] args) throws IOException
+	{
+		Scanner input = new Scanner(System.in);
+		Database DB = new Database(); //Creates a Database object for menu methods
+		printMenu();
 		int choice = input.nextInt();
-		System.out.println(choice);
+		//System.out.println(choice);
 		
 		while (choice != 9)
 		{
 			if (choice == 1) {
-				System.out.println("Create Database");
+				System.out.println("---Create a Database---");
 				DB.create();
-				System.out.print("Choose from the above list of options: ");
+				printMenu();
 				choice = input.nextInt();
 			}
 			else if (choice == 2) {
-				System.out.println("Open Database");
+				System.out.println("---Open a Database---");
 				boolean open = DB.open();
-				System.out.println(open);
+				//System.out.println(open);
 				if (open) 
 				{
 					System.out.println("Database opened");
+					System.out.println("The database you opened has " + DB.getNumRecords() + " records.");
 				}
 				else 
 				{
 					System.out.println("Database doesn't exist");
 				}
-				System.out.print("Choose from the above list of options: ");
+				printMenu();
 				choice = input.nextInt();
 			}
 			else if (choice == 3) {
-				System.out.println("Closing database...");
+				System.out.println("---Close a Database---");
 				boolean close = DB.close();
-				if (close)
+				if (close == false)
 				{
 					System.out.println("Files successfully closed");
 				}
@@ -56,35 +60,35 @@ public class Assignment1_DB {
 				{
 					System.out.println("Could not close files, files are not open");
 				}
-				System.out.print("Choose from the above list of options: ");
+				printMenu();
 				choice = input.nextInt();
 			}
 			else if (choice == 4) {
-				System.out.println("Displaying records...");
+				System.out.println("---Display a Record---");
 				DB.display();
-				System.out.print("Choose from the above list of options: ");
+				printMenu();
 				choice = input.nextInt();
 			}
 			else if (choice == 5) {
-				System.out.println("Updating records...");
+				System.out.println("---Update a Record---");
 				DB.update();
-				System.out.print("Choose from the above list of options: ");
+				printMenu();
 				choice = input.nextInt();
 			}
 			else if (choice == 6) {
-				System.out.println("Creating report...");
+				System.out.println("---Creating report---");
 				DB.createReport();
-				System.out.print("Choose from the above list of options: ");
+				printMenu();
 				choice = input.nextInt();
 			}
 			else if (choice == 7) {
 				System.out.println("Adding report...");
-				System.out.print("Choose from the above list of options: ");
+				printMenu();
 				choice = input.nextInt();
 			}
 			else if (choice == 8) {
 				System.out.println("Delete record...");
-				System.out.print("Choose from the above list of options: ");
+				printMenu();
 				choice = input.nextInt();
 			}
 			else
