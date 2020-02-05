@@ -12,7 +12,7 @@ public class Assignment1_DB {
 		System.out.println("4.) Display Record");
 		System.out.println("5.) Update Record");
 		System.out.println("6.) Create Report");
-		System.out.println("7.) Add Report");
+		System.out.println("7.) Add Record");
 		System.out.println("8.) Delete Record");
 		System.out.println("9.) Quit");
 		System.out.print("Input: ");
@@ -35,31 +35,13 @@ public class Assignment1_DB {
 			}
 			else if (choice == 2) {
 				System.out.println("---Open a Database---");
-				boolean open = DB.open();
-				//System.out.println(open);
-				if (open) 
-				{
-					System.out.println("Database opened");
-					System.out.println("The database you opened has " + DB.getNumRecords() + " records.");
-				}
-				else 
-				{
-					System.out.println("Database doesn't exist");
-				}
+				DB.open();
 				printMenu();
 				choice = input.nextInt();
 			}
 			else if (choice == 3) {
 				System.out.println("---Close a Database---");
-				boolean close = DB.close();
-				if (close == false)
-				{
-					System.out.println("Files successfully closed");
-				}
-				else
-				{
-					System.out.println("Could not close files, files are not open");
-				}
+				DB.close();
 				printMenu();
 				choice = input.nextInt();
 			}
@@ -82,12 +64,13 @@ public class Assignment1_DB {
 				choice = input.nextInt();
 			}
 			else if (choice == 7) {
-				System.out.println("Adding report...");
+				System.out.println("---Add a new Record---");
+				DB.addRecord();
 				printMenu();
 				choice = input.nextInt();
 			}
 			else if (choice == 8) {
-				System.out.println("Delete record...");
+				System.out.println("---Delete a Record---");
 				DB.deleteRecord();
 				printMenu();
 				choice = input.nextInt();
@@ -97,6 +80,12 @@ public class Assignment1_DB {
 				System.out.print("Invalid input, enter choice from the list: ");
 				choice = input.nextInt();
 			}
+		}
+		while (DB.isOpen)
+		{
+			System.out.println("You left the database open!");
+			System.out.println("Closing database automatically...");
+			DB.close();
 		}
 		System.out.println("Quitting...");
 		System.exit(0);
